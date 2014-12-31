@@ -5,7 +5,7 @@ module FakeBraintree
   class CreditCard
     include Helpers
 
-    def initialize(credit_card_hash_from_params, options)
+    def initialize(credit_card_hash_from_params, options = {})
       set_up_credit_card(credit_card_hash_from_params, options)
       set_billing_address
       set_bin
@@ -47,6 +47,10 @@ module FakeBraintree
       else
         response_for_card_not_found
       end
+    end
+
+    def to_h
+      @credit_card
     end
 
     def to_xml

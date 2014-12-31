@@ -23,8 +23,12 @@ module FakeBraintree
     include Helpers
 
     helpers do
+      def request_body
+        @request_body ||= Hash.from_xml(request.body)
+      end
+
       def hash_from_request_body_with_key(key)
-        value = Hash.from_xml(request.body).delete(key)
+        value = request_body.delete(key)
         if value.is_a?(String) # This happens if there isn't actually nested data under `key`
           {}
         else

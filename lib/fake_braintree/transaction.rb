@@ -12,7 +12,8 @@ module FakeBraintree
         "id" => id,
         "amount" => data["amount"],
         "status" => status,
-        "type" => "sale"
+        "type" => "sale",
+        "credit_card" => credit_card.to_h
       }
 
       FakeBraintree.registry.transactions[id] = response
@@ -27,6 +28,10 @@ module FakeBraintree
       else
         "authorized"
       end
+    end
+
+    def credit_card
+      CreditCard.new(data['credit_card'] || {})
     end
 
     def submit_for_settlement?

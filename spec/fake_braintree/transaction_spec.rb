@@ -9,6 +9,30 @@ describe FakeBraintree::SinatraApp do
       )
       expect(result).to be_success
       expect(result.transaction.type).to eq 'sale'
+      expect(result.transaction.amount).to eq 10.00
+    end
+
+    describe 'credit card details' do
+      let(:result) do
+        Braintree::Transaction.sale(
+          payment_method_token: cc_token,
+          amount: 10.00,
+          credit_card: {
+            number:          '1234123412341234',
+            expiration_date: '10/2015',
+            cardholder_name: 'John Smith',
+            cvv:             '123'
+          }
+        )
+      end
+
+      subject { result.transaction.credit_card_details }
+
+      its(:card_type) { should == 'FakeBraintree' }
+      its(:last_4) { should == '1234' }
+      its(:cardholder_name) { should == 'John Smith' }
+      its(:expiration_month) { should == '10' }
+      its(:expiration_year) { should == '2015' }
     end
 
     context 'when all cards are declined' do
