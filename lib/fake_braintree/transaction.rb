@@ -31,7 +31,9 @@ module FakeBraintree
     end
 
     def credit_card
-      CreditCard.new(data['credit_card'] || {})
+      token = data['payment_method_nonce'] || data['payment_method_token']
+      payment_method = FakeBraintree.registry.payment_methods[token]
+      CreditCard.new(payment_method || {})
     end
 
     def submit_for_settlement?

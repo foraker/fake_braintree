@@ -16,14 +16,17 @@ describe FakeBraintree::SinatraApp do
       let(:result) do
         Braintree::Transaction.sale(
           payment_method_token: cc_token,
-          amount: 10.00,
-          credit_card: {
-            number:          '1234123412341234',
-            expiration_date: '10/2015',
-            cardholder_name: 'John Smith',
-            cvv:             '123'
-          }
+          amount: 10.00
         )
+      end
+
+      before do
+        FakeBraintree.registry.payment_methods[cc_token] = {
+          'number'          => '1234123412341234',
+          'expiration_date' => '10/2015',
+          'cardholder_name' => 'John Smith',
+          'cvv'             => '123'
+        }
       end
 
       subject { result.transaction.credit_card_details }
